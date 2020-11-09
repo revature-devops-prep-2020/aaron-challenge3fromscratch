@@ -1,0 +1,47 @@
+podTemplate(containers: [containerTemplate(name: 'maven', image: 'bensonre/jenkins-slave', ttyEnabled: true, command: 'cat')], volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]) {
+  node(POD_LABEL) {
+      try{
+        stage('Get a Maven project') {
+            git 'https://github.com/200803-java-devops/Jank8-sSampleWebProject'
+            container('maven') {
+                stage('Test') {
+                    sh 'mvn test'
+                }
+            }
+            slackSend(color: '#BDFFC3', message: 'Testing stage for Jank8s-Sample App 1 Succeeded')
+        }
+      }catch(e){
+            slackSend(color: '#FF0000', message: 'Testing stage for Jank8s-Sample App 1 Failed. Check console output at http://ec2-35-166-28-86.us-west-2.compute.amazonaws.com:30000/job/gittest_sample1/ to view the results.')
+            error "${e}"
+      }
+    }
+}
+podTemplate(containers: [containerTemplate(name: 'maven', image: 'bensonre/jenkins-slave', ttyEnabled: true, command: 'cat')], volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]) {
+  node(POD_LABEL) {
+      try{
+        stage('Get a Maven project') {
+            git 'https://github.com/200803-java-devops/Jank8-sSampleWebProject'
+            container('maven') {
+                stage('Build a Maven project') {
+                    sh 'mvn clean package -DskipTests'
+                    sh 'cat src/main/static/index.html'
+                }
+                stage('Delivering Artifact to Docker Hub'){
+                     sh 'docker build -t jank8s/jenkins-sample .'
+                     withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', passwordVariable: 'token', usernameVariable: 'username')]) {
+                            sh 'docker login -u '+ username+' -p '+token
+                            sh 'docker push jank8s/jenkins-sample'
+                     }
+                }
+                stage('Delivering and Deploying to Production Server'){
+                    sh 'curl http://ec2-35-166-28-86.us-west-2.compute.amazonaws.com:30006/sample1'
+                }
+            }
+            slackSend(color: '#BDFFC3', message: 'Build and Deployment stages for for Jank8s-Sample App 1 Succeeded')
+        }
+      }catch(e){
+            slackSend(color: '#FF0000', message: 'Build and Deployment stages for Jank8s-Sample App 1 Failed. Check console output at http://ec2-35-166-28-86.us-west-2.compute.amazonaws.com:30000/job/gittest_sample1/ to view the results..')
+            error "${e}"
+      }
+    }
+}
