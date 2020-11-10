@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>sample1</groupId>
   <artifactId>sample1</artifactId>
@@ -8,16 +7,19 @@
   <name>sample1</name>
   <url>http://maven.apache.org</url>
 
-<properties>
+  <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-   <!-- <exec.mainClass>project1.reesebenson.Watch</exec.mainClass> -->
-   <exec.mainClass>sample1.App</exec.mainClass>
-</properties>
+    <!-- <exec.mainClass>project1.reesebenson.Watch</exec.mainClass> -->
+    <exec.mainClass>sample1.App</exec.mainClass>
+    <sonar.projectKey>revature-devops-prep-2020_aaron-challenge3fromscratch</sonar.projectKey>
+    <sonar.organization>revature-devops-prep-2020</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+  </properties>
 
-<dependencies>
-  <dependency>
+  <dependencies>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
@@ -47,8 +49,8 @@
   </dependencies>
 
   <build>
-      <plugins>
-        <plugin>
+    <plugins>
+      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
@@ -71,6 +73,6 @@
           </execution>
         </executions>
       </plugin>
-      </plugins>
+    </plugins>
   </build>
 </project>
